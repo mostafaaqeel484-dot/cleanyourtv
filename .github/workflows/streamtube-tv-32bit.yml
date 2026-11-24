@@ -1,0 +1,36 @@
+name: Build StreamTube Android TV 32-bit APK
+on:
+  push:
+    branches:
+      - streamtube-tv-32bit
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack standalone Android TV source
+        run: unzip -q streamtube-tv/source.zip -d .
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Compile installable Android TV APK
+        run: gradle --no-daemon --project-dir StreamTube-AndroidTV-32bit :app:assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: StreamTube-TV-Android-32bit-v0.1-alpha
+          path: StreamTube-AndroidTV-32bit/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
