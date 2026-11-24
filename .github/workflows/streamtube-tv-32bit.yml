@@ -35,6 +35,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: StreamTube-TV-Android-32bit-v0.1-alpha
+          name: StreamTube-TV-Android-32bit-v0.2-alpha
           path: StreamTube-AndroidTV-32bit/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
